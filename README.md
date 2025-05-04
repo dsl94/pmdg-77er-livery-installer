@@ -32,4 +32,4 @@ Before using this tool, make sure you have the following installed:
 
 ## 🚀 How to Use
 
-1. Download exe from releases pages or urn python script
+1. Download exe from releases pages or run python script
