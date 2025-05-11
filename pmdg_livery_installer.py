@@ -25,7 +25,7 @@ def update_folder_label():
     folder_label_var.set(f"Selected Community folder:\n{folder}")
 
 def select_community_folder():
-    folder = filedialog.askdirectory(title="Select your PMDG Community Folder (contains pmdg-aircraft-77er-liveries)")
+    folder = filedialog.askdirectory(title="Select your MSFS Community Folder (contains pmdg-aircraft-77er-liveries / 77w-liveries)")
     if folder:
         config = load_config()
         config["community_folder"] = folder
@@ -35,10 +35,12 @@ def select_community_folder():
         return folder
     return None
 
-def extract_livery(zip_path, community_folder):
+def extract_livery(zip_path, community_folder, variant):
     try:
-        simobjects_dir = Path(community_folder) / "pmdg-aircraft-77er-liveries" / "SimObjects" / "Airplanes"
-        community_root = Path(community_folder) / "pmdg-aircraft-77er-liveries"
+        addon_folder = f"pmdg-aircraft-{variant}-liveries"
+        package_folder = f"pmdg-aircraft-{variant}"
+        simobjects_dir = Path(community_folder) / addon_folder / "SimObjects" / "Airplanes"
+        community_root = Path(community_folder) / addon_folder
         simobjects_dir.mkdir(parents=True, exist_ok=True)
 
         folder_name = os.path.splitext(os.path.basename(zip_path))[0]
@@ -55,7 +57,6 @@ def extract_livery(zip_path, community_folder):
         if not livery_json_path.exists():
             raise Exception("livery.json not found")
 
-        # Load atcId
         with open(livery_json_path, 'r') as f:
             livery_data = json.load(f)
 
@@ -67,10 +68,9 @@ def extract_livery(zip_path, community_folder):
         if options_ini_path.exists():
             options_ini_path.rename(renamed_ini)
 
-        # Determine ini destination
         ini_target_paths = [
-            Path.home() / "AppData" / "Local" / "Packages" / "Microsoft.FlightSimulator_8wekyb3d8bbwe" / "LocalState" / "Packages" / "pmdg-aircraft-77er" / "work" / "Aircraft",
-            Path.home() / "AppData" / "Roaming" / "Microsoft Flight Simulator" / "Packages" / "pmdg-aircraft-77er" / "work" / "Aircraft"
+            Path.home() / "AppData" / "Local" / "Packages" / "Microsoft.FlightSimulator_8wekyb3d8bbwe" / "LocalState" / "Packages" / package_folder / "work" / "Aircraft",
+            Path.home() / "AppData" / "Roaming" / "Microsoft Flight Simulator" / "Packages" / package_folder / "work" / "Aircraft"
         ]
         ini_target = next((p for p in ini_target_paths if p.exists()), None)
         if not ini_target:
@@ -78,7 +78,7 @@ def extract_livery(zip_path, community_folder):
 
         shutil.copy(renamed_ini, ini_target)
 
-        # Regenerate layout
+        # Regenerate layout.json
         layout_json = community_root / "layout.json"
         layout_gen_exe = community_root / "MSFSLayoutGenerator.exe"
         gen_layout_bat = community_root / "GEN_LAYOUT.bat"
@@ -88,11 +88,11 @@ def extract_livery(zip_path, community_folder):
         elif gen_layout_bat.exists():
             subprocess.run([str(gen_layout_bat)], shell=True)
 
-        return f"Livery installed: '{folder_name}' with atcId: '{atc_id}'"
+        return f"Livery installed for {variant.upper()}: '{folder_name}' with atcId: '{atc_id}'"
     except Exception as e:
         return f"Error: {str(e)}"
 
-def browse_zip():
+def browse_zip_for_variant(variant):
     zip_path = filedialog.askopenfilename(filetypes=[("ZIP files", "*.zip")])
     if not zip_path:
         return
@@ -106,7 +106,7 @@ def browse_zip():
             messagebox.showwarning("Canceled", "Community folder not selected.")
             return
 
-    result = extract_livery(zip_path, community)
+    result = extract_livery(zip_path, community, variant)
     messagebox.showinfo("Result", result)
 
 def change_community_folder():
@@ -114,17 +114,18 @@ def change_community_folder():
 
 # GUI
 root = tk.Tk()
-root.title("PMDG 77ER Livery Installer")
+root.title("PMDG 777 Livery Installer")
 
 frame = tk.Frame(root, padx=20, pady=20)
 frame.pack()
 
-tk.Label(frame, text="Select a PMDG 77ER livery .zip file:").pack()
+tk.Label(frame, text="Select a PMDG 777 livery .zip file:").pack()
 
-tk.Button(frame, text="Install Livery (.zip)", command=browse_zip).pack(pady=10)
-tk.Button(frame, text="Change Community Folder", command=change_community_folder).pack(pady=5)
+tk.Button(frame, text="Install 777-200ER Livery", command=lambda: browse_zip_for_variant("77er")).pack(pady=5)
+tk.Button(frame, text="Install 777-300ER Livery", command=lambda: browse_zip_for_variant("77w")).pack(pady=5)
 
-# Show current community folder
+tk.Button(frame, text="Change Community Folder", command=change_community_folder).pack(pady=10)
+
 folder_label_var = tk.StringVar()
 update_folder_label()
 tk.Label(frame, textvariable=folder_label_var, wraplength=400, justify="center", fg="blue").pack(pady=10)
