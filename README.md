@@ -1,5 +1,5 @@
 # PMDG 777 Livery Installer Tool
-## Supports 200ER and 300
+## Supports 200ER, 300 and 200F - zip files only, no ptp
 
 This is a simple GUI tool that helps you install third-party liveries for the **PMDG 777-200ER** and **PMDG 777-300**  in **Microsoft Flight Simulator (MSFS 2020)** without using PMDG Operations Center 3.0.
 
@@ -30,6 +30,11 @@ Before using this tool, make sure you have the following installed:
 - ✅ **PMDG 777-300 livery addon** installed in your Community folder  
   Download from:  
  https://simplaza.org/wp-content/uploads/2025/05/pmdg-aircraft-77w-liveries.rar
+
+- ✅ **PMDG 777-200F livery addon** installed in your Community folder  
+  Download from:  
+[ https://simplaza.org/wp-content/uploads/2025/05/pmdg-aircraft-77w-liveries.rar](https://simplaza.org/wp-content/uploads/2025/05/pmdg-aircraft-77f-liveries.rar)
+
 - ✅ A third-party livery `.zip` file from [https://flightsim.to](https://flightsim.to)
 
 ---
