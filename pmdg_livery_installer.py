@@ -114,15 +114,20 @@ def change_community_folder():
 
 # GUI
 root = tk.Tk()
-root.title("PMDG 777 Livery Installer")
+root.title("PMDG Livery Installer")
 
 frame = tk.Frame(root, padx=20, pady=20)
 frame.pack()
 
-tk.Label(frame, text="Select a PMDG 777 livery .zip file:").pack()
+tk.Label(frame, text="Select a PMDG aircarft livery .zip file:").pack()
 
 tk.Button(frame, text="Install 777-200ER Livery", command=lambda: browse_zip_for_variant("77er")).pack(pady=5)
 tk.Button(frame, text="Install 777-300ER Livery", command=lambda: browse_zip_for_variant("77w")).pack(pady=5)
+tk.Button(frame, text="Install 777-200F Livery", command=lambda: browse_zip_for_variant("77f")).pack(pady=5)
+tk.Button(frame, text="Install 737-600 Livery", command=lambda: browse_zip_for_variant("736")).pack(pady=5)
+tk.Button(frame, text="Install 737-700 Livery", command=lambda: browse_zip_for_variant("737")).pack(pady=5)
+tk.Button(frame, text="Install 737-800 Livery", command=lambda: browse_zip_for_variant("738")).pack(pady=5)
+tk.Button(frame, text="Install 737-900 Livery", command=lambda: browse_zip_for_variant("739")).pack(pady=5)
 
 tk.Button(frame, text="Change Community Folder", command=change_community_folder).pack(pady=10)
 
